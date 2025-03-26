@@ -59,6 +59,23 @@ class MovieRepositoryImpl @Inject constructor(
         emit(list)
     }
 
+    override fun getNowPlayingMovies1(): Flow<MovieList> = flow {
+        val list = movieDataSource.getNowPlayingMovieList1()
+        emit(list)
+    }
+    override fun getNowPlayingMovies2(): Flow<MovieList> = flow {
+        val list = movieDataSource.getNowPlayingMovieList2()
+        emit(list)
+    }
+    override fun getNowPlayingMovies3(): Flow<MovieList> = flow {
+        val list = movieDataSource.getNowPlayingMovieList3()
+        emit(list)
+    }
+    override fun getNowPlayingMovies4(): Flow<MovieList> = flow {
+        val list = movieDataSource.getNowPlayingMovieList4()
+        emit(list)
+    }
+
     override fun getMovieCategories() = flow {
         val list = movieCategoryDataSource.getMovieCategoryList()
         emit(list)

@@ -27,6 +27,10 @@ interface MovieRepository {
     fun getTrendingMovies(): Flow<MovieList>
     fun getTop10Movies(): Flow<MovieList>
     fun getNowPlayingMovies(): Flow<MovieList>
+    fun getNowPlayingMovies1(): Flow<MovieList>
+    fun getNowPlayingMovies2(): Flow<MovieList>
+    fun getNowPlayingMovies3(): Flow<MovieList>
+    fun getNowPlayingMovies4(): Flow<MovieList>
     fun getMovieCategories(): Flow<MovieCategoryList>
     suspend fun getMovieCategoryDetails(categoryId: String): MovieCategoryDetails
     suspend fun getMovieDetails(movieId: String): MovieDetails

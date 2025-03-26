@@ -243,7 +243,7 @@ private fun Body(
                 },
                 goToVideoPlayer = openVideoPlayer,
                 onScroll = updateTopBarVisibility,
-                isTopBarVisible = isTopBarVisible
+                isTopBarVisible = false
             )
         }
         composable(Screens.Categories()) {

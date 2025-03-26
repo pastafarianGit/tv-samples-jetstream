@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,9 +53,16 @@ fun HomeScreen(
     homeScreeViewModel: HomeScreeViewModel = hiltViewModel(),
 ) {
     val uiState by homeScreeViewModel.uiState.collectAsStateWithLifecycle()
-
+    println("on HomeScreen")
     when (val s = uiState) {
         is HomeScreenUiState.Ready -> {
+            val frontRows = listOf( // 6 per row
+                s.featuredMovieList, s.trendingMovieList, s.top10MovieList, s.nowPlayingMovieList,  s.nowPlayingMovieList1, s.nowPlayingMovieList2, s.nowPlayingMovieList3,  s.nowPlayingMovieList4,
+                s.featuredMovieList, s.trendingMovieList, s.top10MovieList, s.nowPlayingMovieList,  s.nowPlayingMovieList1, s.nowPlayingMovieList2, s.nowPlayingMovieList3,  s.nowPlayingMovieList4,
+                s.featuredMovieList, s.trendingMovieList, s.top10MovieList, s.nowPlayingMovieList,  s.nowPlayingMovieList1, s.nowPlayingMovieList2, s.nowPlayingMovieList3,  s.nowPlayingMovieList4,
+                s.featuredMovieList, s.trendingMovieList, s.top10MovieList, s.nowPlayingMovieList,  s.nowPlayingMovieList1, s.nowPlayingMovieList2, s.nowPlayingMovieList3,  s.nowPlayingMovieList4,
+            )
+
             Catalog(
                 featuredMovies = s.featuredMovieList,
                 trendingMovies = s.trendingMovieList,
@@ -65,6 +73,7 @@ fun HomeScreen(
                 goToVideoPlayer = goToVideoPlayer,
                 isTopBarVisible = isTopBarVisible,
                 modifier = Modifier.fillMaxSize(),
+                frontRows = frontRows
             )
         }
 
@@ -84,6 +93,7 @@ private fun Catalog(
     goToVideoPlayer: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
+    frontRows: List<MovieList>,
 ) {
 
     val lazyListState = rememberLazyListState()
@@ -93,7 +103,7 @@ private fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex == 0 &&
-                lazyListState.firstVisibleItemScrollOffset < 300
+                    lazyListState.firstVisibleItemScrollOffset < 300
         }
     }
 
@@ -110,7 +120,6 @@ private fun Catalog(
         // Setting overscan margin to bottom to ensure the last row's visibility
         modifier = modifier,
     ) {
-
         item(contentType = "FeaturedMoviesCarousel") {
             FeaturedMoviesCarousel(
                 movies = featuredMovies,
@@ -125,29 +134,12 @@ private fun Catalog(
                  */
             )
         }
-        item(contentType = "MoviesRow") {
+        itemsIndexed(frontRows) { index, movieList ->
             MoviesRow(
                 modifier = Modifier.padding(top = 16.dp),
-                movieList = trendingMovies,
-                title = StringConstants.Composable.HomeScreenTrendingTitle,
-                onMovieSelected = onMovieClick
-            )
-        }
-        item(contentType = "Top10MoviesList") {
-            Top10MoviesList(
-                movieList = top10Movies,
-                onMovieClick = onMovieClick,
-                modifier = Modifier.onFocusChanged {
-                    immersiveListHasFocus = it.hasFocus
-                },
-            )
-        }
-        item(contentType = "MoviesRow") {
-            MoviesRow(
-                modifier = Modifier.padding(top = 16.dp),
-                movieList = nowPlayingMovies,
-                title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
-                onMovieSelected = onMovieClick
+                movieList = movieList,
+                title = "$index ${StringConstants.Composable.HomeScreenNowPlayingMoviesTitle}",
+                onMovieSelected = onMovieClick,
             )
         }
     }

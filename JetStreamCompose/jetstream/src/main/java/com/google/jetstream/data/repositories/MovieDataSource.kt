@@ -54,6 +54,31 @@ class MovieDataSource @Inject constructor(
         }
     }
 
+    private val nowPlayingMovieDataReader1: MovieDataReader = MovieDataReader {
+        readMovieData(assetsReader, StringConstants.Assets.InTheaters).subList(30, 40).map {
+            it.toMovie()
+        }
+    }
+    private val nowPlayingMovieDataReader2: MovieDataReader = MovieDataReader {
+        readMovieData(assetsReader, StringConstants.Assets.InTheaters).subList(40, 50).map {
+            it.toMovie()
+        }
+    }
+
+    private val nowPlayingMovieDataReader3: MovieDataReader = MovieDataReader {
+        readMovieData(assetsReader, StringConstants.Assets.InTheaters).subList(50, 60).map {
+            it.toMovie()
+        }
+    }
+    private val nowPlayingMovieDataReader4: MovieDataReader = MovieDataReader {
+        readMovieData(assetsReader, StringConstants.Assets.InTheaters).subList(10, 20).map {
+            it.toMovie()
+        }
+    }
+
+
+
+
     suspend fun getMovieList(thumbnailType: ThumbnailType = ThumbnailType.Standard) =
         when (thumbnailType) {
             ThumbnailType.Standard -> movieDataReader.read()
@@ -74,9 +99,22 @@ class MovieDataSource @Inject constructor(
     suspend fun getNowPlayingMovieList() =
         nowPlayingMovieDataReader.read()
 
+    suspend fun getNowPlayingMovieList1() =
+        nowPlayingMovieDataReader1.read()
+
+    suspend fun getNowPlayingMovieList2() =
+        nowPlayingMovieDataReader2.read()
+
+    suspend fun getNowPlayingMovieList3() =
+        nowPlayingMovieDataReader3.read()
+
+    suspend fun getNowPlayingMovieList4() =
+        nowPlayingMovieDataReader4.read()
+
     suspend fun getPopularFilmThisWeek() =
         mostPopularMovieDataReader.read().subList(11, 20)
 
     suspend fun getFavoriteMovieList() =
         movieDataReader.read().subList(0, 28)
+
 }

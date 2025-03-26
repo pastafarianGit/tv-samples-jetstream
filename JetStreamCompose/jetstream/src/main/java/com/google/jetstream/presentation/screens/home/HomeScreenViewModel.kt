@@ -31,16 +31,32 @@ import kotlinx.coroutines.flow.stateIn
 class HomeScreeViewModel @Inject constructor(movieRepository: MovieRepository) : ViewModel() {
 
     val uiState: StateFlow<HomeScreenUiState> = combine(
-        movieRepository.getFeaturedMovies(),
-        movieRepository.getTrendingMovies(),
-        movieRepository.getTop10Movies(),
-        movieRepository.getNowPlayingMovies(),
-    ) { featuredMovieList, trendingMovieList, top10MovieList, nowPlayingMovieList ->
+        combine(
+            movieRepository.getFeaturedMovies(),
+            movieRepository.getTrendingMovies(),
+            movieRepository.getTop10Movies(),
+            movieRepository.getNowPlayingMovies(),
+            movieRepository.getNowPlayingMovies1(),
+        ) { featuredMovieList, trendingMovieList, top10MovieList, nowPlayingMovieList, getNowPlayingMovieList1 ->
+            Triple(featuredMovieList, trendingMovieList, Triple(top10MovieList, nowPlayingMovieList, getNowPlayingMovieList1))
+        },
+        combine(
+            movieRepository.getNowPlayingMovies2(),
+            movieRepository.getNowPlayingMovies3(),
+            movieRepository.getNowPlayingMovies4(),
+        ) { getNowPlayingMovieList2, getNowPlayingMovieList3, getNowPlayingMovieList4 ->
+            Triple(getNowPlayingMovieList2, getNowPlayingMovieList3, getNowPlayingMovieList4)
+        }
+    ) { (featuredMovieList, trendingMovieList, triple1), triple2 ->
         HomeScreenUiState.Ready(
             featuredMovieList,
             trendingMovieList,
-            top10MovieList,
-            nowPlayingMovieList
+            triple1.first,
+            triple1.second,
+            triple1.third,
+            triple2.first,
+            triple2.second,
+            triple2.third,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -56,6 +72,10 @@ sealed interface HomeScreenUiState {
         val featuredMovieList: MovieList,
         val trendingMovieList: MovieList,
         val top10MovieList: MovieList,
-        val nowPlayingMovieList: MovieList
+        val nowPlayingMovieList: MovieList,
+        val nowPlayingMovieList1: MovieList,
+        val nowPlayingMovieList2: MovieList,
+        val nowPlayingMovieList3: MovieList,
+        val nowPlayingMovieList4: MovieList,
     ) : HomeScreenUiState
 }
